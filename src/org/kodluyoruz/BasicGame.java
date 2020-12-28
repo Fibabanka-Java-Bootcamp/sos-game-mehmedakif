@@ -7,7 +7,7 @@ class BasicGame extends Game
     int mapSize;
     String[][] gameMap;
     List<Player> playerList = new ArrayList<>();
-    Player turnOfPlayer; // Isaretleme yapmasi beklenen oyuncu.
+    Player theCurrentPlayer; // Isaretleme yapmasi beklenen oyuncu.
 
     @Override
     public void setMapSize(String mapSize)
@@ -26,91 +26,88 @@ class BasicGame extends Game
                 this.gameMap[i][j] = " ";
             }
         }
+        this.printMap(this.gameMap);
     }
     @Override
-    void isPlayerScored(int givenRow, int givenColumn)
+    public boolean isPlayerScored(Player player, int givenRow, int givenColumn)
     {
-        boolean isScored;
+        boolean isScored = false;
         String[] triplesToCheck = new String[3];
-        isScored = checkCloseAdjacents(givenRow, givenColumn, triplesToCheck);
-        isScored = isScored || checkDistantAdjacents(givenRow, givenColumn, triplesToCheck);
+        //isScored = checkCloseAdjacents(givenRow, givenColumn, triplesToCheck);
+        //isScored = isScored || checkDistantAdjacents(givenRow, givenColumn, triplesToCheck);
 
-        if(!isScored)
-        {
-            this.switchTurn();
-        }
-
+        this.printMap(this.gameMap);
+        return isScored;
     }
 
-    void switchTurn()
+    public void switchTurn()
     {
-        if(turnOfPlayer.equals(playerList.get(0)))
+        if(theCurrentPlayer.equals(playerList.get(0)))
         {
-            turnOfPlayer = playerList.get(1);
+            theCurrentPlayer = playerList.get(1);
         }
-        else if (turnOfPlayer.equals(playerList.get(1)))
+        else if (theCurrentPlayer.equals(playerList.get(1)))
         {
-            turnOfPlayer = playerList.get(0);
+            theCurrentPlayer = playerList.get(0);
         }
     }
 
     @Override
-    boolean isGameEnded()
+    public boolean isGameEnded()
     {
-        if(Arrays.deepToString(this.gameMap).length() == Math.pow(mapSize,2.0))
+        if(!Arrays.deepToString(this.gameMap).contains(" "))
         {
-            System.out.println("Oyun alanı doldu. Oyun bitti.");
+            System.out.println("Karakter koyacak bosluk kalmadi oyun bitti.");
             return true;
         }
         return false;
     }
 
     @Override
-    void printMap()
+    void printMap(String[][] map)
     {
+        for (int i = 0; i< this.mapSize; i++)
+        {
+            System.out.println(Arrays.toString(map[i]));
 
-    }
-
-    @Override
-    void updateMap()
-    {
-
+        }
     }
 
     private boolean checkCloseAdjacents(int givenRow, int givenColumn, String[] triplesToCheck)
     {
+        //TODO implement corner and edge states.
+
         boolean isScored = false;
         triplesToCheck[0] = gameMap[givenRow -1][givenColumn -1];
         triplesToCheck[1] = gameMap[givenRow][givenColumn];
         triplesToCheck[2] = gameMap[givenRow +1][givenColumn +1];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
-
         triplesToCheck[0] = gameMap[givenRow -1][givenColumn +1];
         triplesToCheck[1] = gameMap[givenRow][givenColumn];
         triplesToCheck[2] = gameMap[givenRow +1][givenColumn -1];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         triplesToCheck[0] = gameMap[givenRow -1][givenColumn];
         triplesToCheck[1] = gameMap[givenRow][givenColumn];
         triplesToCheck[2] = gameMap[givenRow +1][givenColumn];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         triplesToCheck[0] = gameMap[givenRow][givenColumn -1];
         triplesToCheck[1] = gameMap[givenRow][givenColumn];
         triplesToCheck[2] = gameMap[givenRow][givenColumn +1];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         return isScored;
@@ -121,66 +118,66 @@ class BasicGame extends Game
         triplesToCheck[0] = gameMap[givenRow -2][givenColumn -2];
         triplesToCheck[1] = gameMap[givenRow -1][givenColumn -1];
         triplesToCheck[2] = gameMap[givenRow][givenColumn];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
 
         triplesToCheck[0] = gameMap[givenRow -2][givenColumn];
         triplesToCheck[1] = gameMap[givenRow -1][givenColumn];
         triplesToCheck[2] = gameMap[givenRow][givenColumn];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         triplesToCheck[0] = gameMap[givenRow -2][givenColumn+2];
         triplesToCheck[1] = gameMap[givenRow -1][givenColumn+1];
         triplesToCheck[2] = gameMap[givenRow][givenColumn];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         triplesToCheck[0] = gameMap[givenRow][givenColumn +2];
         triplesToCheck[1] = gameMap[givenRow][givenColumn +1];
         triplesToCheck[2] = gameMap[givenRow][givenColumn];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         triplesToCheck[0] = gameMap[givenRow +2][givenColumn +2];
         triplesToCheck[1] = gameMap[givenRow +1][givenColumn +1];
         triplesToCheck[2] = gameMap[givenRow][givenColumn];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         triplesToCheck[0] = gameMap[givenRow +2][givenColumn];
         triplesToCheck[1] = gameMap[givenRow +1][givenColumn];
         triplesToCheck[2] = gameMap[givenRow][givenColumn];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         triplesToCheck[0] = gameMap[givenRow +2][givenColumn-2];
         triplesToCheck[1] = gameMap[givenRow +1][givenColumn-1];
         triplesToCheck[2] = gameMap[givenRow][givenColumn];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         triplesToCheck[0] = gameMap[givenRow][givenColumn -2];
         triplesToCheck[1] = gameMap[givenRow][givenColumn -1];
         triplesToCheck[2] = gameMap[givenRow][givenColumn];
-        if(Arrays.toString(triplesToCheck).toUpperCase(Locale.ROOT).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("SOS"))
         {
-            this.turnOfPlayer.increasePlayerPoint();
+            this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
         return isScored;

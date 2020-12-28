@@ -3,16 +3,18 @@ package org.kodluyoruz;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Locale;
 
 public class Main
 {
+    static int sizeInput;
+    static int rowInput;
+    static int columnInput;
+    static String charInput;
+
     public static void main(String[] args) throws IOException
     {
-        int sizeInput;
-        int rowInput;
-        int columnInput;
-        String charInput;
+
 
         BufferedReader reader =
                 new BufferedReader(new InputStreamReader(System.in));
@@ -28,37 +30,54 @@ public class Main
         HumanPlayer player1 = new HumanPlayer();
         AIPlayer aiPlayer = new AIPlayer();
 
-        game.playerList.add(player1);
-        game.playerList.add(aiPlayer);
+        game.playerList.add(0,player1);
+        game.playerList.add(1,aiPlayer);
 
-        game.turnOfPlayer = game.playerList.get(0);
+        game.theCurrentPlayer = game.playerList.get(0);
+        while(!game.isGameEnded())
+        {
 
+            System.out.println("----------------");
+            System.out.println(game.theCurrentPlayer.getClass() + "Skor: " + game.theCurrentPlayer.point);
+            if(game.theCurrentPlayer instanceof HumanPlayer)
+            {
+                getInput(reader,game);
+                game.theCurrentPlayer.play(rowInput-1,columnInput-1,game.gameMap,charInput);
+                if(!game.isPlayerScored(game.theCurrentPlayer, rowInput-1,columnInput-1))
+                {
+                    game.switchTurn();
+                }
+                else game.theCurrentPlayer.increasePlayerPoint();
+            }
+            else
+                {
+                    game.theCurrentPlayer.play(rowInput-1,columnInput-1,game.gameMap,charInput);
+                    if(!game.isPlayerScored(game.theCurrentPlayer, rowInput-1,columnInput-1))
+                    {
+                        game.switchTurn();
+                    }
+                    else game.theCurrentPlayer.increasePlayerPoint();
+                }
 
+        }
+        System.out.println("Oyun bitti");
+    }
+
+    private static void getInput(BufferedReader reader, GameSession game) throws IOException {
         do{
-            System.out.print("Satır:" + "(1-" + game.mapSize + ")");
+            System.out.print("Satır" + "(1-" + game.mapSize + "):");
             rowInput = Integer.parseInt(reader.readLine());
         }while(rowInput<0 || rowInput> game.mapSize);
 
         do{
-            System.out.print("Sutun:"+ "(1-" + game.mapSize + ")");
+            System.out.print("Sutun"+ "(1-" + game.mapSize + "):");
             columnInput = Integer.parseInt(reader.readLine());
         }while(columnInput<0 || columnInput> game.mapSize);
 
         do{
             System.out.print("S/O:");
             charInput = (reader.readLine());
+            charInput =charInput.toUpperCase(Locale.ROOT);
         }while(!charInput.equalsIgnoreCase("S") && !charInput.equalsIgnoreCase("O"));
-
-        if(game.turnOfPlayer.play(rowInput-1,columnInput-1,game.gameMap,charInput))
-        {
-            System.out.print("Yay!");
-        }
-        else
-        {
-            System.out.print("Ohhh!");
-        }
-
-        System.out.print(Arrays.deepToString(game.gameMap));
-
     }
 }
