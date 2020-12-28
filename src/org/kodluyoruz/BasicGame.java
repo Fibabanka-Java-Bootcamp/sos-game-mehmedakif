@@ -12,20 +12,34 @@ class BasicGame extends Game
     @Override
     public void setMapSize(String mapSize)
     {
-        this.mapSize = Integer.parseInt(mapSize);
+        this.mapSize = Integer.parseInt(mapSize)+1;
     }
     @Override
     public void createMap()
     {
-        this.gameMap = new String[this.mapSize][this.mapSize];
 
-        for (int i = 0; i < this.mapSize; i++)
+        this.gameMap = new String[this.mapSize+4][this.mapSize+4];
+        this.gameMap[0][0] = "0";
+        for (int i = 1; i < this.mapSize+4; i++)
         {
-            for (int j = 0; j < this.mapSize; j++)
+            for (int j = 1; j < this.mapSize+4; j++)
             {
-                this.gameMap[i][j] = " ";
+                this.gameMap[i][j] = "-";
+                this.gameMap[0][j] = String.valueOf(j);
+            }
+            this.gameMap[i][0] = String.valueOf(i);
+        }
+
+
+        for (int i = 1; i < this.mapSize+1; i++)
+        {
+            for (int j = 1; j < this.mapSize+1; j++)
+            {
+                    this.gameMap[i][j] = " ";
             }
         }
+
+
         this.printMap(this.gameMap);
     }
     @Override
@@ -33,8 +47,7 @@ class BasicGame extends Game
     {
         boolean isScored = false;
         String[] triplesToCheck = new String[3];
-        //isScored = checkCloseAdjacents(givenRow, givenColumn, triplesToCheck);
-        //isScored = isScored || checkDistantAdjacents(givenRow, givenColumn, triplesToCheck);
+        isScored = checkCloseAdjacents(givenRow, givenColumn, triplesToCheck);
 
         this.printMap(this.gameMap);
         return isScored;
@@ -68,8 +81,12 @@ class BasicGame extends Game
     {
         for (int i = 0; i< this.mapSize; i++)
         {
-            System.out.println(Arrays.toString(map[i]));
-
+            for (int j= 0; j< this.mapSize; j++)
+            {
+                if(!map[i][j].equals("-"))
+                    System.out.print((map[i][j])+ "| ");
+            }
+            System.out.println("");
         }
     }
 
@@ -81,7 +98,7 @@ class BasicGame extends Game
         triplesToCheck[0] = gameMap[givenRow -1][givenColumn -1];
         triplesToCheck[1] = gameMap[givenRow][givenColumn];
         triplesToCheck[2] = gameMap[givenRow +1][givenColumn +1];
-        if(Arrays.toString(triplesToCheck).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("[S, O, S]"))
         {
             this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
@@ -89,7 +106,7 @@ class BasicGame extends Game
         triplesToCheck[0] = gameMap[givenRow -1][givenColumn +1];
         triplesToCheck[1] = gameMap[givenRow][givenColumn];
         triplesToCheck[2] = gameMap[givenRow +1][givenColumn -1];
-        if(Arrays.toString(triplesToCheck).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("[S, O, S]"))
         {
             this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
@@ -97,7 +114,7 @@ class BasicGame extends Game
         triplesToCheck[0] = gameMap[givenRow -1][givenColumn];
         triplesToCheck[1] = gameMap[givenRow][givenColumn];
         triplesToCheck[2] = gameMap[givenRow +1][givenColumn];
-        if(Arrays.toString(triplesToCheck).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("[S, O, S]"))
         {
             this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
@@ -105,11 +122,12 @@ class BasicGame extends Game
         triplesToCheck[0] = gameMap[givenRow][givenColumn -1];
         triplesToCheck[1] = gameMap[givenRow][givenColumn];
         triplesToCheck[2] = gameMap[givenRow][givenColumn +1];
-        if(Arrays.toString(triplesToCheck).equals("SOS"))
+        if(Arrays.toString(triplesToCheck).equals("[S, O, S]"))
         {
             this.theCurrentPlayer.increasePlayerPoint();
             isScored = true;
         }
+        System.out.println(Arrays.toString(triplesToCheck));
         return isScored;
     }
     private boolean checkDistantAdjacents(int givenRow, int givenColumn, String[] triplesToCheck)

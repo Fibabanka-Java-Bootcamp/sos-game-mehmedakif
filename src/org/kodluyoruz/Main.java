@@ -42,8 +42,8 @@ public class Main
             if(game.theCurrentPlayer instanceof HumanPlayer)
             {
                 getInput(reader,game);
-                game.theCurrentPlayer.play(rowInput-1,columnInput-1,game.gameMap,charInput);
-                if(!game.isPlayerScored(game.theCurrentPlayer, rowInput-1,columnInput-1))
+                game.theCurrentPlayer.play(rowInput,columnInput,game.gameMap,charInput);
+                if(!game.isPlayerScored(game.theCurrentPlayer, rowInput,columnInput))
                 {
                     game.switchTurn();
                 }
@@ -51,8 +51,8 @@ public class Main
             }
             else
                 {
-                    game.theCurrentPlayer.play(rowInput-1,columnInput-1,game.gameMap,charInput);
-                    if(!game.isPlayerScored(game.theCurrentPlayer, rowInput-1,columnInput-1))
+                    game.theCurrentPlayer.play(rowInput,columnInput,game.gameMap,charInput);
+                    if(!game.isPlayerScored(game.theCurrentPlayer, rowInput,columnInput))
                     {
                         game.switchTurn();
                     }
@@ -65,17 +65,17 @@ public class Main
 
     private static void getInput(BufferedReader reader, GameSession game) throws IOException {
         do{
-            System.out.print("Satır" + "(1-" + game.mapSize + "):");
+            System.out.print("Satır: ");
             rowInput = Integer.parseInt(reader.readLine());
         }while(rowInput<0 || rowInput> game.mapSize);
 
         do{
-            System.out.print("Sutun"+ "(1-" + game.mapSize + "):");
+            System.out.print("Sutun: ");
             columnInput = Integer.parseInt(reader.readLine());
         }while(columnInput<0 || columnInput> game.mapSize);
 
         do{
-            System.out.print("S/O:");
+            System.out.print("S/O: ");
             charInput = (reader.readLine());
             charInput =charInput.toUpperCase(Locale.ROOT);
         }while(!charInput.equalsIgnoreCase("S") && !charInput.equalsIgnoreCase("O"));
